@@ -74,7 +74,6 @@ public class BookController {
      * @param id indicates the id of the book to be searched
      * @exception BookNotFoundException returns an exception if the book is not found
      * */
-    @GetMapping("/{id}")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Long id) {

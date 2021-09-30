@@ -93,13 +93,16 @@ public class BookRepository implements IBookRepository {
      * @param id indicates the id of the book to be deleted
      * */
     @Override
-    public void deleteById(Long id) {
+    public synchronized void deleteById(Long id) {
+        List<Book> itemToBeDeleted = new ArrayList<>();
         try {
             books.forEach(b -> {
                 if (b.getId().equals(id)) {
-                    books.remove(b);
+                    itemToBeDeleted.add(b);
                 }
+
             });
+            books.remove(itemToBeDeleted.get(0));
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -117,10 +120,13 @@ public class BookRepository implements IBookRepository {
                     selectedBook.add(b);
                 }
             });
-            return Optional.of(selectedBook.get(0));
+            if (selectedBook.size() > 0) {
+                return Optional.of(selectedBook.get(0));
+            }
         } else {
             return Optional.empty();
         }
+        return Optional.empty();
     }
 
 }
