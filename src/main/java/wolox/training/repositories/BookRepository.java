@@ -9,7 +9,7 @@ import wolox.training.models.Book;
 /**
  * This class is responsible of handling the data according to the modification of the services and contains all the
  * logic of those mentioned above.
- * */
+ */
 @Repository
 public class BookRepository implements IBookRepository {
 
@@ -18,7 +18,7 @@ public class BookRepository implements IBookRepository {
 
     /**
      * Constructor for books creation if necessary
-     * */
+     */
     public BookRepository() {
         books = new ArrayList<>();
         book = new Book(1L, "Action", "Juan Cruz Poli", "http://example", "Wolox Training", "Wolox", "2021", 155,
@@ -38,9 +38,10 @@ public class BookRepository implements IBookRepository {
     }
 
     /**
-     * @return the entire book of the selected author
      * @param author indicates the author to be searched
-     * */
+     *
+     * @return the entire book of the selected author
+     */
     @Override
     public Optional<List<Book>> findByAuthor(String author) {
         List<Book> authorBooks = new ArrayList<>();
@@ -59,9 +60,10 @@ public class BookRepository implements IBookRepository {
 
 
     /**
-     * @return The added book
      * @param book indicates the book to be added
-     * */
+     *
+     * @return The added book
+     */
     @Override
     public Optional<Book> save(Book book) {
         try {
@@ -74,10 +76,11 @@ public class BookRepository implements IBookRepository {
     }
 
     /**
-     * @return The updated book
      * @param book indicates the book to be updated
-     * @param id indicates the id of the book to be added
-     * */
+     * @param id   indicates the id of the book to be added
+     *
+     * @return The updated book
+     */
     @Override
     public Optional<Book> update(Book book, Long id) {
         try {
@@ -91,7 +94,7 @@ public class BookRepository implements IBookRepository {
 
     /**
      * @param id indicates the id of the book to be deleted
-     * */
+     */
     @Override
     public synchronized void deleteById(Long id) {
         List<Book> itemToBeDeleted = new ArrayList<>();
@@ -110,7 +113,7 @@ public class BookRepository implements IBookRepository {
 
     /**
      * @param id indicates the id of the book to be searched
-     * */
+     */
     @Override
     public Optional<Book> findById(Long id) {
         List<Book> selectedBook = new ArrayList<>();

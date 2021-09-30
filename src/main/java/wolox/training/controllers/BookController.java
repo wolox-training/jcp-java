@@ -1,11 +1,12 @@
 package wolox.training.controllers;
 
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,7 @@ import wolox.training.repositories.IBookRepository;
 
 /**
  * This class is the service responsible of handling the requests related to the book api
- * */
+ */
 
 @RestController
 @RequestMapping("/api/books")
@@ -41,7 +42,7 @@ public class BookController {
 
     /**
      * @return all the books contained in the model
-     * */
+     */
     @GetMapping("/all")
     public Optional<List<Book>> findAll() {
         if (bookRepository.findAll().isPresent()) {
@@ -53,8 +54,9 @@ public class BookController {
 
     /**
      * @param bookAuthor indicates the author to be searched
+     *
      * @return the entire book of the selected author
-     * */
+     */
     @GetMapping("/author/{bookAuthor}")
     public Optional<List<Book>> findByAuthor(@PathVariable String bookAuthor) {
         return bookRepository.findByAuthor(bookAuthor);
@@ -62,8 +64,9 @@ public class BookController {
 
     /**
      * @param book indicates the book to be added
+     *
      * @return the created book
-     * */
+     */
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public Optional<Book> create(@RequestBody Book book) {
@@ -72,9 +75,10 @@ public class BookController {
 
     /**
      * @param id indicates the id of the book to be searched
-     * @exception BookNotFoundException returns an exception if the book is not found
-     * */
-    @DeleteMapping("/{id}")
+     *
+     * @throws BookNotFoundException returns an exception if the book is not found
+     */
+    @RequestMapping(value = "/{id}", method = DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Long id) {
         bookRepository.findById(id)
@@ -83,11 +87,12 @@ public class BookController {
     }
 
     /**
-     * @param id indicates the id of the book to be updated
+     * @param id   indicates the id of the book to be updated
      * @param book indicates the information of the book to be updated
+     *
      * @return the updated book
-     * @exception BookNotFoundException returns an exception if the book is not found
-     * */
+     * @throws BookNotFoundException returns an exception if the book is not found
+     */
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<Book> updateBook(@RequestBody Book book, @PathVariable Long id) {
