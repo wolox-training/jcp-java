@@ -1,7 +1,6 @@
 package wolox.training.controllers;
 
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import wolox.training.exceptions.BookIdMismatchException;
 import wolox.training.exceptions.BookNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.repositories.IBookRepository;
@@ -46,8 +44,10 @@ public class BookController {
      */
     @GetMapping("/all")
     public Optional<List<Book>> findAll() {
-        if (bookRepository.findAll().isPresent()) {
-            return Optional.of(bookRepository.findAll().get());
+        List<Book> allBooks = new ArrayList<>();
+        if (bookRepository.findAll().iterator().hasNext()) {
+            bookRepository.findAll().forEach(b -> allBooks.add(b));
+            return Optional.of(allBooks);
         } else {
             return Optional.empty();
         }
@@ -60,7 +60,24 @@ public class BookController {
      */
     @GetMapping("/author/{bookAuthor}")
     public Optional<List<Book>> findByAuthor(@PathVariable String bookAuthor) {
-        return bookRepository.findByAuthor(bookAuthor);
+        List<Book> authorBooks = new ArrayList<>();
+        if (bookRepository.findByBookAuthor(bookAuthor).iterator().hasNext()) {
+            bookRepository.findByBookAuthor(bookAuthor).forEach(b -> authorBooks.add(b));
+            return Optional.of(authorBooks);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @GetMapping("/{bookGenre}")
+    public Optional<List<Book>> findByGenre(@PathVariable String bookGenre) {
+        List<Book> genreBooks = new ArrayList<>();
+        if (bookRepository.findByBookGenre(bookGenre).iterator().hasNext()) {
+            bookRepository.findByBookGenre(bookGenre).forEach(b -> genreBooks.add(b));
+            return Optional.of(genreBooks);
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**
@@ -70,7 +87,7 @@ public class BookController {
      */
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Optional<Book> create(@RequestBody Book book) {
+    public Book create(@RequestBody Book book) {
         return bookRepository.save(book);
     }
 
@@ -96,12 +113,9 @@ public class BookController {
      */
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Book> updateBook(@RequestBody Book book, @PathVariable Long id) {
-        if (book.getId() != id) {
-            throw new BookIdMismatchException();
-        }
+    public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
         bookRepository.findById(id)
                 .orElseThrow(BookNotFoundException::new);
-        return bookRepository.update(book, id);
+        return bookRepository.save(book);
     }
 }

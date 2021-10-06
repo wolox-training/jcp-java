@@ -1,20 +1,15 @@
 package wolox.training.repositories;
 
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import wolox.training.models.Book;
 
-public interface IBookRepository {
+public interface IBookRepository extends CrudRepository<Book, Long> {
 
-    Optional<List<Book>> findAll();
+    @Query(value = "SELECT * FROM book WHERE book_author=:author", nativeQuery = true)
+    Iterable<Book> findByBookAuthor(@Param("author") String author);
 
-    Optional<List<Book>> findByAuthor(String author);
-
-    Optional<Book> save(Book book);
-
-    Optional<Book> update(Book book, Long id);
-
-    void deleteById(Long id);
-
-    Optional<Book> findById(Long id);
+    @Query(value = "SELECT * FROM book b WHERE b.book_genre=:genre", nativeQuery = true)
+    Iterable<Book> findByBookGenre(@Param("genre") String genre);
 }

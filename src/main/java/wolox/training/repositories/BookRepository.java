@@ -1,8 +1,7 @@
 package wolox.training.repositories;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import wolox.training.models.Book;
 
@@ -13,123 +12,83 @@ import wolox.training.models.Book;
 @Repository
 public class BookRepository implements IBookRepository {
 
-    private List<Book> books;
-    private Book book;
+    @Autowired
+    IBookRepository bookRepository;
 
     /**
      * Constructor for books creation if necessary
      */
     public BookRepository() {
-        books = new ArrayList<>();
-        book = new Book(1L, "Action", "Juan Cruz Poli", "http://example", "Wolox Training", "Wolox", "2021", 155,
-                "abc123");
-        books.add(book);
-        book = new Book(2L, "Terror", "Juan Perez", "http://example2", "Wolox Training2", "Wolox2", "2021", 188,
-                "abc1234");
-        books.add(book);
-        book = new Book(3L, "Fantasy", "Juan Cruz Poli", "http://example3", "Wolox Training3", "Wolox3", "2021", 237,
-                "abc12345");
-        books.add(book);
+
     }
 
     @Override
-    public Optional<List<Book>> findAll() {
-        return Optional.of(books);
+    public Iterable<Book> findAll() {
+        return bookRepository.findAll();
     }
 
-    /**
-     * @param author indicates the author to be searched
-     *
-     * @return the entire book of the selected author
-     */
     @Override
-    public Optional<List<Book>> findByAuthor(String author) {
-        List<Book> authorBooks = new ArrayList<>();
-        try {
-            books.stream().forEach(b -> {
-                if (b.getAuthor().replace(" ", "").equals(author)) {
-                    authorBooks.add(b);
-                }
-            });
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
-        return Optional.of(authorBooks);
+    public Iterable<Book> findByBookAuthor(String author) {
+        return bookRepository.findByBookAuthor(author);
     }
 
-
-    /**
-     * @param book indicates the book to be added
-     *
-     * @return The added book
-     */
     @Override
-    public Optional<Book> save(Book book) {
-        try {
-            books.add(book);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
-        return Optional.of(book);
+    public Iterable<Book> findByBookGenre(String genre) {
+        return bookRepository.findByBookGenre(genre);
     }
 
-    /**
-     * @param book indicates the book to be updated
-     * @param id   indicates the id of the book to be added
-     *
-     * @return The updated book
-     */
     @Override
-    public Optional<Book> update(Book book, Long id) {
-        try {
-            books.replaceAll(b -> b.getId().equals(id) ? book : b);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
-        return Optional.of(book);
+    public <S extends Book> S save(S entity) {
+        return bookRepository.save(entity);
     }
 
-    /**
-     * @param id indicates the id of the book to be deleted
-     */
     @Override
-    public synchronized void deleteById(Long id) {
-        List<Book> itemToBeDeleted = new ArrayList<>();
-        try {
-            books.forEach(b -> {
-                if (b.getId().equals(id)) {
-                    itemToBeDeleted.add(b);
-                }
-
-            });
-            books.remove(itemToBeDeleted.get(0));
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+    public <S extends Book> Iterable<S> saveAll(Iterable<S> entities) {
+        return null;
     }
 
-    /**
-     * @param id indicates the id of the book to be searched
-     */
     @Override
-    public Optional<Book> findById(Long id) {
-        List<Book> selectedBook = new ArrayList<>();
-        if (books.size() >= id) {
-            books.stream().forEach(b -> {
-                if (b.getId().equals(id)) {
-                    selectedBook.add(b);
-                }
-            });
-            if (selectedBook.size() > 0) {
-                return Optional.of(selectedBook.get(0));
-            }
-        } else {
-            return Optional.empty();
-        }
-        return Optional.empty();
+    public Optional<Book> findById(Long aLong) {
+        return bookRepository.findById(aLong);
     }
 
+    @Override
+    public boolean existsById(Long aLong) {
+        return false;
+    }
+
+    @Override
+    public Iterable<Book> findAllById(Iterable<Long> longs) {
+        return null;
+    }
+
+    @Override
+    public long count() {
+        return 0;
+    }
+
+    @Override
+    public void deleteById(Long aLong) {
+        bookRepository.deleteById(aLong);
+    }
+
+    @Override
+    public void delete(Book entity) {
+
+    }
+
+    @Override
+    public void deleteAllById(Iterable<? extends Long> longs) {
+
+    }
+
+    @Override
+    public void deleteAll(Iterable<? extends Book> entities) {
+
+    }
+
+    @Override
+    public void deleteAll() {
+
+    }
 }
