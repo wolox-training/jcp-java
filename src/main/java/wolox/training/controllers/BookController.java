@@ -3,7 +3,6 @@ package wolox.training.controllers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,11 +25,14 @@ import wolox.training.repositories.IBookRepository;
  */
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/books")
 public class BookController {
 
-    @Autowired
-    private IBookRepository bookRepository;
+    private final IBookRepository bookRepository;
+
+    public BookController(IBookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
 
     @GetMapping("/greeting")
     public String greeting(@RequestParam(name = "name", required = false, defaultValue = "Poli") String name,
@@ -42,15 +44,9 @@ public class BookController {
     /**
      * @return all the books contained in the model
      */
-    @GetMapping("/all")
-    public Optional<List<Book>> findAll() {
-        List<Book> allBooks = new ArrayList<>();
-        if (bookRepository.findAll().iterator().hasNext()) {
-            bookRepository.findAll().forEach(b -> allBooks.add(b));
-            return Optional.of(allBooks);
-        } else {
-            return Optional.empty();
-        }
+    @GetMapping()
+    public Iterable<Book> findAll() {
+        return bookRepository.findAll();
     }
 
     /**
@@ -85,7 +81,7 @@ public class BookController {
      *
      * @return the created book
      */
-    @PostMapping("/create")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public Book create(@RequestBody Book book) {
         return bookRepository.save(book);
@@ -97,7 +93,7 @@ public class BookController {
      * @throws BookNotFoundException returns an exception if the book is not found
      */
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         bookRepository.findById(id)
                 .orElseThrow(BookNotFoundException::new);
@@ -105,16 +101,15 @@ public class BookController {
     }
 
     /**
-     * @param id   indicates the id of the book to be updated
      * @param book indicates the information of the book to be updated
      *
      * @return the updated book
      * @throws BookNotFoundException returns an exception if the book is not found
      */
-    @PutMapping("/{id}")
+    @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
-        bookRepository.findById(id)
+    public Book updateBook(@RequestBody Book book) {
+        bookRepository.findById(book.getBookId())
                 .orElseThrow(BookNotFoundException::new);
         return bookRepository.save(book);
     }
