@@ -1,5 +1,8 @@
 package wolox.training.models;
 
+import static wolox.training.constants.ErrorConstants.nullMessage;
+
+import com.google.common.base.Preconditions;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -101,38 +104,47 @@ public class Book {
     }
 
     public void setBookGenre(String bookGenre) {
+        Preconditions.checkNotNull(bookGenre, nullMessage);
         this.bookGenre = bookGenre;
     }
 
     public void setBookAuthor(String bookAuthor) {
+        Preconditions.checkNotNull(bookAuthor, nullMessage);
         this.bookAuthor = bookAuthor;
     }
 
     public void setBookImage(String bookImage) {
+        Preconditions.checkNotNull(bookImage, nullMessage);
         this.bookImage = bookImage;
     }
 
     public void setBookTitle(String bookTitle) {
+        Preconditions.checkNotNull(bookTitle, nullMessage);
         this.bookTitle = bookTitle;
     }
 
     public void setBookSubtitle(String bookSubtitle) {
+        Preconditions.checkNotNull(bookSubtitle, nullMessage);
         this.bookSubtitle = bookSubtitle;
     }
 
     public void setBookPublisher(String bookPublisher) {
+        Preconditions.checkNotNull(bookPublisher, nullMessage);
         this.bookPublisher = bookPublisher;
     }
 
     public void setBookYear(String bookYear) {
+        Preconditions.checkNotNull(bookYear, nullMessage);
         this.bookYear = bookYear;
     }
 
     public void setBookPages(Integer bookPages) {
+        Preconditions.checkNotNull(bookPages, nullMessage);
         this.bookPages = bookPages;
     }
 
     public void setBookIsbn(String bookIsbn) {
+        Preconditions.checkNotNull(bookIsbn, nullMessage);
         this.bookIsbn = bookIsbn;
     }
 }
