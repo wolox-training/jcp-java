@@ -27,6 +27,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String userUsername;
 
+    @Column(nullable = true, unique = false)
+    private String password;
+
     @Column(nullable = false)
     private String userName;
 
@@ -49,12 +52,13 @@ public class User {
         this.userId = userId;
     }
 
-    public User(String UserUsername, String userName, LocalDate userBirthday,
+    public User(String UserUsername, String password, String userName, LocalDate userBirthday,
             List<Book> books) {
         this.userUsername = UserUsername;
         this.userName = userName;
         this.userBirthday = userBirthday;
         this.books = books;
+        this.password = password;
     }
 
     public void addBook(Book book) {
@@ -87,6 +91,10 @@ public class User {
         return Collections.unmodifiableList(books);
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public void setUserId(Long userId) {
         Preconditions.checkNotNull(userId, nullMessage);
         this.userId = userId;
@@ -110,5 +118,10 @@ public class User {
     public void setBooks(List<Book> books) {
         Preconditions.checkNotNull(books, nullMessage);
         this.books = books;
+    }
+
+    public void setPassword(String password) {
+        Preconditions.checkNotNull(password, nullMessage);
+        this.password = password;
     }
 }

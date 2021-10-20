@@ -23,6 +23,7 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools:2.5.5'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.5.5'
 	implementation group: 'com.google.guava', name: 'guava', version: '27.0-jre'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.5.1'
 }
 
 test {
