@@ -13,126 +13,125 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long bookId;
+    private Long id;
 
     @Column(nullable = true, unique = false)
-    private String bookGenre;
+    private String genre;
 
     @Column(nullable = false)
-    private String bookAuthor;
+    private String author;
 
     @Column(nullable = false)
-    private String bookImage;
+    private String image;
 
     @Column(nullable = false, unique = true)
-    private String bookTitle;
+    private String title;
 
     @Column(nullable = false, unique = true)
-    private String bookSubtitle;
+    private String subtitle;
 
     @Column(nullable = false)
-    private String bookPublisher;
+    private String publisher;
 
     @Column(nullable = false)
-    private String bookYear;
+    private String year;
 
     @Column(nullable = false)
-    private Integer bookPages;
+    private Integer pages;
 
     @Column(nullable = false, unique = true)
-    private String bookIsbn;
+    private String isbn;
 
     public Book() {
     }
 
-    public Book(Long bookId, String bookGenre, String bookAuthor, String bookImage, String bookTitle,
-            String bookSubtitle, String bookPublisher, String bookYear, Integer bookPages, String bookIsbn) {
+    public Book(String genre, String author, String image, String title,
+            String subtitle, String publisher, String year, Integer pages, String isbn) {
 
-        this.bookId = bookId;
-        this.bookGenre = bookGenre;
-        this.bookAuthor = bookAuthor;
-        this.bookImage = bookImage;
-        this.bookTitle = bookTitle;
-        this.bookSubtitle = bookSubtitle;
-        this.bookPublisher = bookPublisher;
-        this.bookYear = bookYear;
-        this.bookPages = bookPages;
-        this.bookIsbn = bookIsbn;
+        this.genre = genre;
+        this.author = author;
+        this.image = image;
+        this.title = title;
+        this.subtitle = subtitle;
+        this.publisher = publisher;
+        this.year = year;
+        this.pages = pages;
+        this.isbn = isbn;
     }
 
-    public Long getBookId() {
-        return bookId;
+    public Long getId() {
+        return id;
     }
 
-    public String getBookGenre() {
-        return bookGenre;
+    public String getGenre() {
+        return genre;
     }
 
-    public String getBookAuthor() {
-        return bookAuthor;
+    public String getAuthor() {
+        return author;
     }
 
-    public String getBookImage() {
-        return bookImage;
+    public String getImage() {
+        return image;
     }
 
-    public String getBookTitle() {
-        return bookTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public String getBookSubtitle() {
-        return bookSubtitle;
+    public String getSubtitle() {
+        return subtitle;
     }
 
-    public String getBookPublisher() {
-        return bookPublisher;
+    public String getPublisher() {
+        return publisher;
     }
 
-    public String getBookYear() {
-        return bookYear;
+    public String getYear() {
+        return year;
     }
 
-    public Integer getBookPages() {
-        return bookPages;
+    public Integer getPages() {
+        return pages;
     }
 
-    public String getBookIsbn() {
-        return bookIsbn;
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setBookGenre(String bookGenre) {
-        this.bookGenre = bookGenre;
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
-    public void setBookAuthor(String bookAuthor) {
-        this.bookAuthor = bookAuthor;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
-    public void setBookImage(String bookImage) {
-        this.bookImage = bookImage;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public void setBookTitle(String bookTitle) {
-        this.bookTitle = bookTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setBookSubtitle(String bookSubtitle) {
-        this.bookSubtitle = bookSubtitle;
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
     }
 
-    public void setBookPublisher(String bookPublisher) {
-        this.bookPublisher = bookPublisher;
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
     }
 
-    public void setBookYear(String bookYear) {
-        this.bookYear = bookYear;
+    public void setYear(String year) {
+        this.year = year;
     }
 
-    public void setBookPages(Integer bookPages) {
-        this.bookPages = bookPages;
+    public void setPages(Integer pages) {
+        this.pages = pages;
     }
 
-    public void setBookIsbn(String bookIsbn) {
-        this.bookIsbn = bookIsbn;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 }
