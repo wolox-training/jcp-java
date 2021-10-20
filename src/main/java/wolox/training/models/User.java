@@ -1,5 +1,8 @@
 package wolox.training.models;
 
+import static wolox.training.constants.ErrorConstants.nullMessage;
+
+import com.google.common.base.Preconditions;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,19 +87,27 @@ public class User {
         return Collections.unmodifiableList(books);
     }
 
+    public void setId(Long id) {
+        Preconditions.checkNotNull(id, nullMessage.replace("{object}", String.valueOf(id)));
+        this.id = id;
+    }
+
     public void setUsername(String username) {
+        Preconditions.checkNotNull(username, nullMessage.replace("{object}", username));
         this.username = username;
     }
 
     public void setName(String name) {
+        Preconditions.checkNotNull(name, nullMessage.replace("{object}", name));
         this.name = name;
     }
 
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
+    public void setBirthday(LocalDate userBirthday) {
+        this.birthday = userBirthday;
     }
 
     public void setBooks(List<Book> books) {
+        Preconditions.checkNotNull(books, nullMessage.replace("{object}", String.valueOf(books)));
         this.books = books;
     }
 }
