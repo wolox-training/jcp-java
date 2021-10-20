@@ -16,135 +16,133 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long bookId;
+    private Long id;
 
     @Column(nullable = true, unique = false)
-    private String bookGenre;
+    private String genre;
 
     @Column(nullable = false)
-    private String bookAuthor;
+    private String author;
 
     @Column(nullable = false)
-    private String bookImage;
+    private String image;
 
     @Column(nullable = false, unique = true)
-    private String bookTitle;
+    private String title;
 
     @Column(nullable = false, unique = true)
-    private String bookSubtitle;
+    private String subtitle;
 
     @Column(nullable = false)
-    private String bookPublisher;
+    private String publisher;
 
     @Column(nullable = false)
-    private String bookYear;
+    private String year;
 
     @Column(nullable = false)
-    private Integer bookPages;
+    private Integer pages;
 
     @Column(nullable = false, unique = true)
-    private String bookIsbn;
+    private String isbn;
 
     public Book() {
     }
 
-    public Book(Long bookId, String bookGenre, String bookAuthor, String bookImage, String bookTitle,
-            String bookSubtitle, String bookPublisher, String bookYear, Integer bookPages, String bookIsbn) {
+    public Book(String genre, String author, String image, String title,
+            String subtitle, String publisher, String year, Integer pages, String isbn) {
 
-        this.bookId = bookId;
-        this.bookGenre = bookGenre;
-        this.bookAuthor = bookAuthor;
-        this.bookImage = bookImage;
-        this.bookTitle = bookTitle;
-        this.bookSubtitle = bookSubtitle;
-        this.bookPublisher = bookPublisher;
-        this.bookYear = bookYear;
-        this.bookPages = bookPages;
-        this.bookIsbn = bookIsbn;
+        this.genre = genre;
+        this.author = author;
+        this.image = image;
+        this.title = title;
+        this.subtitle = subtitle;
+        this.publisher = publisher;
+        this.year = year;
+        this.pages = pages;
+        this.isbn = isbn;
     }
 
-    public Long getBookId() {
-        return bookId;
+    public Long getId() {
+        return id;
     }
 
-    public String getBookGenre() {
-        return bookGenre;
+    public String getGenre() {
+        return genre;
     }
 
-    public String getBookAuthor() {
-        return bookAuthor;
+    public String getAuthor() {
+        return author;
     }
 
-    public String getBookImage() {
-        return bookImage;
+    public String getImage() {
+        return image;
     }
 
-    public String getBookTitle() {
-        return bookTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public String getBookSubtitle() {
-        return bookSubtitle;
+    public String getSubtitle() {
+        return subtitle;
     }
 
-    public String getBookPublisher() {
-        return bookPublisher;
+    public String getPublisher() {
+        return publisher;
     }
 
-    public String getBookYear() {
-        return bookYear;
+    public String getYear() {
+        return year;
     }
 
-    public Integer getBookPages() {
-        return bookPages;
+    public Integer getPages() {
+        return pages;
     }
 
-    public String getBookIsbn() {
-        return bookIsbn;
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setBookGenre(String bookGenre) {
-        Preconditions.checkNotNull(bookGenre, nullMessage);
-        this.bookGenre = bookGenre;
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
-    public void setBookAuthor(String bookAuthor) {
-        Preconditions.checkNotNull(bookAuthor, nullMessage);
-        this.bookAuthor = bookAuthor;
+    public void setAuthor(String author) {
+        Preconditions.checkNotNull(author, nullMessage.replace("{object}", author));
+        this.author = author;
     }
 
-    public void setBookImage(String bookImage) {
-        Preconditions.checkNotNull(bookImage, nullMessage);
-        this.bookImage = bookImage;
+    public void setImage(String image) {
+        Preconditions.checkNotNull(image, nullMessage.replace("{object}", image));
+        this.image = image;
     }
 
-    public void setBookTitle(String bookTitle) {
-        Preconditions.checkNotNull(bookTitle, nullMessage);
-        this.bookTitle = bookTitle;
+    public void setTitle(String title) {
+        Preconditions.checkNotNull(title, nullMessage.replace("{object}", title));
+        this.title = title;
     }
 
-    public void setBookSubtitle(String bookSubtitle) {
-        Preconditions.checkNotNull(bookSubtitle, nullMessage);
-        this.bookSubtitle = bookSubtitle;
+    public void setSubtitle(String subtitle) {
+        Preconditions.checkNotNull(subtitle, nullMessage.replace("{object}", subtitle));
+        this.subtitle = subtitle;
     }
 
-    public void setBookPublisher(String bookPublisher) {
-        Preconditions.checkNotNull(bookPublisher, nullMessage);
-        this.bookPublisher = bookPublisher;
+    public void setPublisher(String publisher) {
+        Preconditions.checkNotNull(publisher, nullMessage.replace("{object}", publisher));
+        this.publisher = publisher;
     }
 
-    public void setBookYear(String bookYear) {
-        Preconditions.checkNotNull(bookYear, nullMessage);
-        this.bookYear = bookYear;
+    public void setYear(String year) {
+        Preconditions.checkNotNull(year, nullMessage.replace("{object}", year));
+        this.year = year;
     }
 
-    public void setBookPages(Integer bookPages) {
-        Preconditions.checkNotNull(bookPages, nullMessage);
-        this.bookPages = bookPages;
+    public void setPages(Integer pages) {
+        Preconditions.checkNotNull(pages, nullMessage.replace("{object}", String.valueOf(pages)));
+        this.pages = pages;
     }
 
-    public void setBookIsbn(String bookIsbn) {
-        Preconditions.checkNotNull(bookIsbn, nullMessage);
-        this.bookIsbn = bookIsbn;
+    public void setIsbn(String isbn) {
+        Preconditions.checkNotNull(isbn, nullMessage.replace("{object}", isbn));
+        this.isbn = isbn;
     }
 }
