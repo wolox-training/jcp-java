@@ -1,8 +1,8 @@
 package wolox.training.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import static java.util.Objects.isNull;
+
+import java.util.concurrent.atomic.AtomicReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import wolox.training.exceptions.UserNotFoundException;
@@ -36,14 +37,8 @@ public class UserController {
      * @return all the users contained in the model
      */
     @GetMapping()
-    public Optional<List<User>> findAll() {
-        List<User> allUsers = new ArrayList<>();
-        if (userRepository.findAll().iterator().hasNext()) {
-            userRepository.findAll().forEach(b -> allUsers.add(b));
-            return Optional.of(allUsers);
-        } else {
-            return Optional.empty();
-        }
+    public Iterable<User> findAll() {
+        return userRepository.findAll();
     }
 
     /**
@@ -53,20 +48,20 @@ public class UserController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public User findById(@PathVariable Long id) {
+    public User findById(@RequestParam Long id) {
         return userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
     }
 
     /**
-     * @param userUsername indicates the username to be searched
+     * @param username indicates the username to be searched
      *
      * @return the entire user of the selected username
      */
-    @GetMapping("/getUser/{userUsername}")
+    @GetMapping("/getUser/")
     @ResponseStatus(HttpStatus.OK)
-    public User findById(@PathVariable String userUsername) {
-        return userRepository.findByUserUsername(userUsername)
+    public User findByUsername(@RequestParam String username) {
+        return userRepository.findByUsername(username)
                 .orElseThrow(UserNotFoundException::new);
     }
 
@@ -103,7 +98,7 @@ public class UserController {
     @PutMapping()
     @ResponseStatus(HttpStatus.OK)
     public User updateUser(@RequestBody User user) {
-        userRepository.findById(user.getUserId())
+        userRepository.findById(user.getId())
                 .orElseThrow(UserNotFoundException::new);
         return userRepository.save(user);
     }
@@ -118,9 +113,19 @@ public class UserController {
     @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public User addBookToUser(@RequestBody Book book, @PathVariable Long userId) {
+        AtomicReference<Book> existingBook = null;
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
-        user.addBook(book);
+        user.getBooks().stream().forEach(u -> {
+                    if (u.getId().equals(book.getId())) {
+                        existingBook.set(book);
+                    }
+                }
+        );
+
+        if (isNull(existingBook)) {
+            user.addBook(book);
+        }
         return userRepository.save(user);
     }
 
@@ -136,8 +141,19 @@ public class UserController {
     public User deleteBookFromUser(@RequestBody Book book, @PathVariable Long userId, @PathVariable Long bookId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
-        Book bookToBeDeleted = bookRepository.findById(bookId).get();
-        user.removeBook(bookToBeDeleted);
+        AtomicReference<Book> bookToBeDeleted = null;
+
+        user.getBooks().stream().forEach(u -> {
+                    if (u.getId().equals(bookRepository.findById(bookId).get())) {
+                        bookToBeDeleted.set(book);
+                    }
+                }
+        );
+
+        if (!isNull(bookToBeDeleted)) {
+            user.removeBook(bookToBeDeleted.get());
+        }
+
         return userRepository.save(user);
     }
 
