@@ -22,16 +22,16 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long userId;
+    private Long id;
 
     @Column(nullable = false, unique = true)
-    private String userUsername;
+    private String username;
 
     @Column(nullable = false)
-    private String userName;
+    private String name;
 
     @Column(nullable = true)
-    private LocalDate userBirthday;
+    private LocalDate birthday;
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private List<Book> books;
@@ -40,20 +40,20 @@ public class User {
         this.books = new ArrayList<>();
     }
 
-    public User(Long userId, String UserUsername, String userName, LocalDate userBirthday,
+    public User(Long id, String username, String name, LocalDate birthday,
             List<Book> books) {
-        this.userUsername = UserUsername;
-        this.userName = userName;
-        this.userBirthday = userBirthday;
+        this.username = username;
+        this.name = name;
+        this.birthday = birthday;
         this.books = books;
-        this.userId = userId;
+        this.id = id;
     }
 
-    public User(String UserUsername, String userName, LocalDate userBirthday,
+    public User(String username, String name, LocalDate birthday,
             List<Book> books) {
-        this.userUsername = UserUsername;
-        this.userName = userName;
-        this.userBirthday = userBirthday;
+        this.username = username;
+        this.name = name;
+        this.birthday = birthday;
         this.books = books;
     }
 
@@ -67,48 +67,47 @@ public class User {
         }
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public String getUserUsername() {
-        return userUsername;
+    public String getUsername() {
+        return username;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public LocalDate getUserBirthday() {
-        return userBirthday;
+    public LocalDate getBirthday() {
+        return birthday;
     }
 
     public List<Book> getBooks() {
         return Collections.unmodifiableList(books);
     }
 
-    public void setUserId(Long userId) {
-        Preconditions.checkNotNull(userId, nullMessage);
-        this.userId = userId;
+    public void setId(Long id) {
+        Preconditions.checkNotNull(id, nullMessage.replace("{object}", String.valueOf(id)));
+        this.id = id;
     }
 
-    public void setUserUsername(String userUsername) {
-        Preconditions.checkNotNull(userUsername, nullMessage);
-        this.userUsername = userUsername;
+    public void setUsername(String username) {
+        Preconditions.checkNotNull(username, nullMessage.replace("{object}", username));
+        this.username = username;
     }
 
-    public void setUserName(String userName) {
-        Preconditions.checkNotNull(userName, nullMessage);
-        this.userName = userName;
+    public void setName(String name) {
+        Preconditions.checkNotNull(name, nullMessage.replace("{object}", name));
+        this.name = name;
     }
 
-    public void setUserBirthday(LocalDate userBirthday) {
-        Preconditions.checkNotNull(userBirthday, nullMessage);
-        this.userBirthday = userBirthday;
+    public void setBirthday(LocalDate userBirthday) {
+        this.birthday = userBirthday;
     }
 
     public void setBooks(List<Book> books) {
-        Preconditions.checkNotNull(books, nullMessage);
+        Preconditions.checkNotNull(books, nullMessage.replace("{object}", String.valueOf(books)));
         this.books = books;
     }
 }

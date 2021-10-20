@@ -50,30 +50,27 @@ public class BookController {
     }
 
     /**
-     * @param bookAuthor indicates the author to be searched
+     * @param author indicates the author to be searched
      *
      * @return the entire book of the selected author
      */
-    @GetMapping("/author/{bookAuthor}")
-    public Optional<List<Book>> findByAuthor(@PathVariable String bookAuthor) {
+    @GetMapping("/author/")
+    public List<Book> findByAuthor(@RequestParam String author) {
         List<Book> authorBooks = new ArrayList<>();
-        if (bookRepository.findByBookAuthor(bookAuthor).iterator().hasNext()) {
-            bookRepository.findByBookAuthor(bookAuthor).forEach(b -> authorBooks.add(b));
-            return Optional.of(authorBooks);
-        } else {
-            return Optional.empty();
+        if (bookRepository.findByAuthor(author).get().iterator().hasNext()) {
+            bookRepository.findByAuthor(author).get().forEach(b -> authorBooks.add(b));
         }
+        return authorBooks;
     }
 
-    @GetMapping("/{bookGenre}")
-    public Optional<List<Book>> findByGenre(@PathVariable String bookGenre) {
+    @GetMapping("/genre/")
+    public List<Book> findByGenre(@RequestParam String genre) {
         List<Book> genreBooks = new ArrayList<>();
-        if (bookRepository.findByBookGenre(bookGenre).iterator().hasNext()) {
-            bookRepository.findByBookGenre(bookGenre).forEach(b -> genreBooks.add(b));
-            return Optional.of(genreBooks);
-        } else {
-            return Optional.empty();
+        if (bookRepository.findByGenre(genre).get().iterator().hasNext()) {
+            bookRepository.findByGenre(genre).get().forEach(b -> genreBooks.add(b));
         }
+
+        return genreBooks;
     }
 
     /**
@@ -109,7 +106,7 @@ public class BookController {
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
     public Book updateBook(@RequestBody Book book) {
-        bookRepository.findById(book.getBookId())
+        bookRepository.findById(book.getId())
                 .orElseThrow(BookNotFoundException::new);
         return bookRepository.save(book);
     }
