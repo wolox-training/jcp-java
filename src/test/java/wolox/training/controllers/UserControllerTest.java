@@ -1,7 +1,12 @@
 package wolox.training.controllers;
 
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -9,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import wolox.training.models.User;
 import wolox.training.repositories.IUserRepository;
 
 @WebMvcTest(UserController.class)
@@ -25,29 +31,39 @@ public class UserControllerTest {
 
     @Test
     public void givenUsers_whenGetUsers_thenReturnAllUsers() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/users").contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(""))
+        List<User> users = new ArrayList<>();
+        doReturn(users).when(userRepository).findAll();
+        mvc.perform(MockMvcRequestBuilders.get("/users").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void givenAUserId_whenGetUser_thenReturnSelectedUser() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/users/23").contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(""))
+        User user = new User();
+        when(userRepository.findById(29L)).thenReturn(Optional.of(user));
+        doReturn(Optional.of(user)).when(userRepository).findById(29L);
+        mvc.perform(MockMvcRequestBuilders.get("/users/29").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
     }
 
     @Test
+    public void givenAnInvalidUserId_whenGetUser_thenReturnInvalidStatusCode() throws Exception {
+        when(userRepository.findById(89L)).thenReturn(Optional.empty());
+        doReturn(Optional.empty()).when(userRepository).findById(89L);
+        mvc.perform(MockMvcRequestBuilders.get("/users/89").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void givenAUserId_whenDeleteUser_thenReturnOkStatusCode() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.delete("/users/23").contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(""))
+        mvc.perform(MockMvcRequestBuilders.delete("/users/29").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void givenAUser_whenUpdateUser_thenReturnUpdatedUserOkStatusCode() throws Exception {
         String request = "{\n"
-                + "    \"userId\": 23,\n"
+                + "    \"userId\": 29,\n"
                 + "    \"userUsername\": \"Polii\",\n"
                 + "    \"userName\": \"PoliJuan\",\n"
                 + "    \"userBirthday\": \"1992-08-07\",\n"
@@ -61,8 +77,8 @@ public class UserControllerTest {
     @Test
     public void givenAUser_whenPostAUser_thenReturnCreatedStatusCode() throws Exception {
         String request = "{\n"
-                + "    \"userUsername\": \"Poli\",\n"
-                + "    \"userName\": \"PoliJuan\",\n"
+                + "    \"userUsername\": \"Poliiii\",\n"
+                + "    \"userName\": \"PoliiiJuan\",\n"
                 + "    \"userBirthday\": \"1992-08-07\",\n"
                 + "    \"books\": []\n"
                 + "}";
