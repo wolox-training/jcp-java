@@ -1,8 +1,15 @@
 package wolox.training.controllers;
 
+import com.google.gson.Gson;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.ParseContext;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import net.minidev.json.JSONObject;
+import org.springframework.boot.json.GsonJsonParser;
+import org.springframework.boot.json.JsonParser;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,9 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import wolox.training.exceptions.BookNotFoundException;
 import wolox.training.models.Book;
+import wolox.training.models.dtos.BookDTO;
 import wolox.training.repositories.IBookRepository;
+import wolox.training.services.IOpenLibraryService;
 
 
 /**
@@ -29,9 +39,12 @@ import wolox.training.repositories.IBookRepository;
 public class BookController {
 
     private final IBookRepository bookRepository;
+    private static IOpenLibraryService openLibraryService;
 
-    public BookController(IBookRepository bookRepository) {
+    public BookController(IBookRepository bookRepository,
+            IOpenLibraryService openLibraryService) {
         this.bookRepository = bookRepository;
+        this.openLibraryService = openLibraryService;
     }
 
     @GetMapping("/greeting")
@@ -109,5 +122,13 @@ public class BookController {
         bookRepository.findById(book.getId())
                 .orElseThrow(BookNotFoundException::new);
         return bookRepository.save(book);
+    }
+
+    @GetMapping("/open-library/")
+    public static BookDTO getLibraryBookByIsbn(@RequestParam String isbn) {
+        Gson gson = new Gson();
+        String resp = openLibraryService.bookInfo(isbn);
+        BookDTO book = gson.fromJson(resp.replace("ISBN:"+isbn,"isbn"),BookDTO.class);
+        return book;
     }
 }
