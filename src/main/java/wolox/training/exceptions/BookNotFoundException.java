@@ -1,11 +1,12 @@
 package wolox.training.exceptions;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-public class BookNotFoundException extends RuntimeException {
+public class BookNotFoundException extends ResponseStatusException {
 
     public BookNotFoundException() {
-        super(String.valueOf(HttpStatus.NOT_FOUND));
+        super(HttpStatus.NOT_FOUND, "Book not found");
     }
 
 }

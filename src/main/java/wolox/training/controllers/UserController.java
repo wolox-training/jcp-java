@@ -48,7 +48,7 @@ public class UserController {
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public User findById(@RequestParam Long id) {
+    public User findById(@PathVariable(value = "id") Long id) {
         return userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
     }
@@ -83,7 +83,7 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUserById(@PathVariable Long id) {
+    public void deleteUserById(@PathVariable(value = "id") Long id) {
         userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
         userRepository.deleteById(id);
