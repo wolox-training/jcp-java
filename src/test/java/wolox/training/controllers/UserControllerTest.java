@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import wolox.training.models.User;
+import wolox.training.repositories.IBookRepository;
 import wolox.training.repositories.IUserRepository;
 
 @WebMvcTest(UserController.class)
@@ -24,7 +25,7 @@ public class UserControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private UserController userController;
+    private IBookRepository bookRepository;
 
     @MockBean
     private IUserRepository userRepository;
@@ -51,7 +52,7 @@ public class UserControllerTest {
         when(userRepository.findById(89L)).thenReturn(Optional.empty());
         doReturn(Optional.empty()).when(userRepository).findById(89L);
         mvc.perform(MockMvcRequestBuilders.get("/users/89").contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test

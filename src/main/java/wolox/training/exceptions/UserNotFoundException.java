@@ -1,11 +1,12 @@
 package wolox.training.exceptions;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-public class UserNotFoundException extends RuntimeException {
+public class UserNotFoundException extends ResponseStatusException {
 
     public UserNotFoundException() {
-        super(String.valueOf(HttpStatus.NOT_FOUND));
+        super(HttpStatus.NOT_FOUND, "User not Found");
     }
 
 }
