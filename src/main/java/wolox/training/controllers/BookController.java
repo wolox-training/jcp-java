@@ -1,15 +1,10 @@
 package wolox.training.controllers;
 
 import com.google.gson.Gson;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.ParseContext;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import net.minidev.json.JSONObject;
-import org.springframework.boot.json.GsonJsonParser;
-import org.springframework.boot.json.JsonParser;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,10 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import wolox.training.exceptions.BookNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.models.dtos.BookDTO;
@@ -58,8 +53,9 @@ public class BookController {
      * @return all the books contained in the model
      */
     @GetMapping()
-    public Iterable<Book> findAll() {
-        return bookRepository.findAll();
+    public Iterable<Book> findAll(@RequestParam Integer page, @RequestParam Integer count,
+            @RequestParam String sorting) {
+        return bookRepository.findAll(page, count, sorting, PageRequest.of(page, count).withSort(Sort.by(sorting)));
     }
 
     /**
@@ -84,6 +80,33 @@ public class BookController {
         }
 
         return genreBooks;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, params = {"genre", "publisher", "year"})
+    public List<Book> findByPublisherGenreYear(@RequestParam String genre, @RequestParam String publisher,
+            @RequestParam String year) {
+        List<Book> books = new ArrayList<>();
+        if (bookRepository.findByPublisherAndGenreAndYear(publisher, genre, year).get().iterator().hasNext()) {
+            bookRepository.findByPublisherAndGenreAndYear(publisher, genre, year).get().forEach(b -> books.add(b));
+        }
+
+        return books;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, params = {"id", "genre", "author", "image", "title", "subtitle",
+            "publisher", "year", "pages", "isbn"})
+    public List<Book> findByPublisherGenreYear(@RequestParam Long id, @RequestParam String genre,
+            @RequestParam String author, @RequestParam String image, @RequestParam String title,
+            @RequestParam String subtitle, @RequestParam String publisher, @RequestParam String year,
+            @RequestParam Integer pages, @RequestParam String isbn) {
+        List<Book> books = new ArrayList<>();
+        if (bookRepository.getAll(id, genre, author, image, title, subtitle, publisher, year, pages, isbn).get()
+                .iterator().hasNext()) {
+            bookRepository.getAll(id, genre, author, image, title, subtitle, publisher, year, pages, isbn).get()
+                    .forEach(b -> books.add(b));
+        }
+
+        return books;
     }
 
     /**
@@ -128,7 +151,7 @@ public class BookController {
     public static BookDTO getLibraryBookByIsbn(@RequestParam String isbn) {
         Gson gson = new Gson();
         String resp = openLibraryService.bookInfo(isbn);
-        BookDTO book = gson.fromJson(resp.replace("ISBN:"+isbn,"isbn"),BookDTO.class);
+        BookDTO book = gson.fromJson(resp.replace("ISBN:" + isbn, "isbn"), BookDTO.class);
         return book;
     }
 }
