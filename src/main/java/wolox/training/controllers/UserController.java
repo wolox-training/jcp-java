@@ -2,7 +2,13 @@ package wolox.training.controllers;
 
 import static java.util.Objects.isNull;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +34,8 @@ public class UserController {
     private final IUserRepository userRepository;
     private final IBookRepository bookRepository;
 
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
+
 
     public UserController(IUserRepository userRepository, IBookRepository bookRepository) {
         this.userRepository = userRepository;
@@ -36,9 +45,11 @@ public class UserController {
     /**
      * @return all the users contained in the model
      */
+
     @GetMapping()
-    public Iterable<User> findAll() {
-        return userRepository.findAll();
+    public Iterable<User> findAll(@RequestParam Integer page, @RequestParam Integer count,
+            @RequestParam String sorting) {
+        return userRepository.findAll(page, count, sorting, PageRequest.of(page, count).withSort(Sort.by(sorting)));
     }
 
     /**
@@ -64,6 +75,21 @@ public class UserController {
         return userRepository.findByUsername(username)
                 .orElseThrow(UserNotFoundException::new);
     }
+
+    @RequestMapping(method = RequestMethod.GET, params = {"fromDate", "toDate", "name"})
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> findByNameAndBirthdayBetween(
+            @RequestParam @DateTimeFormat(pattern = DATE_PATTERN) LocalDate fromDate,
+            @RequestParam @DateTimeFormat(pattern = DATE_PATTERN) LocalDate toDate, @RequestParam String name) {
+        List<User> users = new ArrayList<>();
+        if (userRepository.findByBirthdayBetweenAndNameContaining(fromDate, toDate, name).get().iterator().hasNext()) {
+            userRepository.findByBirthdayBetweenAndNameContaining(fromDate, toDate, name).get()
+                    .forEach(u -> users.add(u));
+        }
+
+        return users;
+    }
+
 
     /**
      * @param user indicates the user to be added
